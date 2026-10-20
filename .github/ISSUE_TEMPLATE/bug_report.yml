@@ -1,0 +1,36 @@
+name: Bug report
+description: Something does not work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Include the exact error message and relevant Grafana logs.
+    validations:
+      required: true
+  - type: input
+    id: grafana-version
+    attributes:
+      label: Grafana version
+      placeholder: e.g. 11.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: firebird-version
+    attributes:
+      label: Firebird server version
+      options:
+        - "5.0"
+        - "4.0"
+        - "3.0"
+        - "2.5"
+        - other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: query
+    attributes:
+      label: Query that fails
+      description: The SQL statement (redact any sensitive identifiers).
+      render: sql

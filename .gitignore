@@ -1,7 +1,7 @@
 # Build artifacts
 dist/
 node_modules/
-pkg/gpx_slh-firebird-datasource
+pkg/gpx_grafana-firebird-datasource*
 *.exe
 
 # Go

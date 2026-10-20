@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - run: npm test
+      - run: npm run build
+
+  backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go vet ./...
+      - run: go test -race ./...
+
+  package:
+    needs: [frontend, backend]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: npm ci && npm run build
+      - run: GOOS=linux GOARCH=amd64 go build -o dist/gpx_grafana-firebird-datasource_linux_amd64 ./pkg
+      - name: Smoke gate — required plugin files present
+        run: |
+          test -f dist/plugin.json
+          test -f dist/module.js
+          test -f dist/gpx_grafana-firebird-datasource_linux_amd64
+          test -f dist/img/logo.svg
+      - uses: actions/upload-artifact@v4
+        with:
+          name: grafana-firebird-datasource
+          path: dist/
