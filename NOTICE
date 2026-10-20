@@ -1,0 +1,21 @@
+NOTICE — Third-party assets
+===========================
+
+src/img/logo.svg
+----------------
+Contains the official Firebird logo (phoenix), derived from
+"Firebird-logo.png" via Wikimedia Commons
+(https://commons.wikimedia.org/wiki/File:Firebird-logo.png).
+
+License: Copyrighted free use (per Wikimedia Commons file metadata).
+Copyright: Firebird Foundation (firebirdsql.org).
+
+The Firebird logo is a trademark of the Firebird Foundation and is used
+here solely to identify compatibility with the Firebird database. It is
+NOT licensed under the Apache-2.0 license that covers the source code of
+this repository. If you redistribute this repository, keep this notice
+intact and the logo file separate from code licensed under Apache-2.0.
+
+Firebird is a registered trademark of the Firebird Foundation.
+Grafana is a trademark of Grafana Labs. This project is not affiliated
+with, endorsed by, or sponsored by the Firebird Foundation or Grafana Labs.

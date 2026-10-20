@@ -1,0 +1,101 @@
+stages:
+  - lint
+  - test
+  - build
+  - package
+
+variables:
+  GOPATH: /go
+  GOTOOLCHAIN: local
+
+.golang-cache: &golang-cache
+  cache:
+    key:
+      files:
+        - go.sum
+    paths:
+      - /go/pkg/mod
+
+.npm-cache: &npm-cache
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+
+lint:go:
+  stage: lint
+  image: golang:1.26.5@sha256:705e964a93a2fd2e75c7d59bb7d781b57e30f12293ffde5175c69229e18fb678
+  <<: *golang-cache
+  script:
+    - cd pkg
+    - go vet ./...
+
+test:go:
+  stage: test
+  image: golang:1.26.5@sha256:705e964a93a2fd2e75c7d59bb7d781b57e30f12293ffde5175c69229e18fb678
+  <<: *golang-cache
+  script:
+    - cd pkg
+    - go test -race -coverprofile=coverage.txt ./...
+  artifacts:
+    paths:
+      - pkg/coverage.txt
+    expire_in: 1 week
+
+test:frontend:
+  stage: test
+  image: node:22
+  <<: *npm-cache
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npm test -- --passWithNoTests
+
+build:backend:
+  stage: build
+  image: golang:1.26.5@sha256:705e964a93a2fd2e75c7d59bb7d781b57e30f12293ffde5175c69229e18fb678
+  <<: *golang-cache
+  script:
+    - cd pkg
+    # Unsigned backend plugins must carry the platform suffix in the binary
+    # name (Grafana fork/execs gpx_<id>_<goos>_<goarch> when no signature
+    # manifest is present).
+    - GOOS=linux GOARCH=amd64 go build -o ../dist/gpx_grafana-firebird-datasource_linux_amd64 .
+    - cp ../dist/gpx_grafana-firebird-datasource_linux_amd64 ../dist/gpx_grafana-firebird-datasource
+    - chmod +x ../dist/gpx_grafana-firebird-datasource_linux_amd64
+  artifacts:
+    paths:
+      - dist/
+
+build:frontend:
+  stage: build
+  image: node:22
+  <<: *npm-cache
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+
+# Packages the complete, loadable plugin (dist must contain plugin.json,
+# module.js, img/, and the gpx_ binary) as a zip artifact.
+package:plugin:
+  stage: package
+  image: node:22
+  script:
+    # Smoke gate: a dist without the manifest is an unbootable plugin.
+    - 'test -f dist/plugin.json || echo FAIL_MANIFEST'
+    - 'test -f dist/module.js || echo FAIL_MODULE'
+    - 'test -d dist/img || echo FAIL_IMG'
+    - 'test -f dist/gpx_grafana-firebird-datasource_linux_amd64 || echo FAIL_BINARY'
+    - 'test -f dist/plugin.json && test -f dist/module.js && test -d dist/img && test -f dist/gpx_grafana-firebird-datasource_linux_amd64'
+    - export VERSION=$(node -p 'JSON.parse(require("fs").readFileSync("dist/plugin.json")).info.version')
+    - apt-get update -qq && apt-get install -y -qq zip
+    - zip -r "grafana-firebird-datasource-${VERSION}.zip" dist
+    - echo "Packaged version ${VERSION}"
+  artifacts:
+    paths:
+      - grafana-firebird-datasource-*.zip
+    expire_in: 30 days

@@ -1,0 +1,28 @@
+{
+  "type": "datasource",
+  "name": "Firebird (Komalog)",
+  "id": "grafana-firebird-datasource",
+  "info": {
+    "description": "Execute read-only SQL queries against Firebird databases from Grafana dashboards",
+    "author": { "name": "grafana-firebird-datasource contributors" },
+    "keywords": ["firebird", "sql", "database", "grafana"],
+    "logos": { "small": "img/logo.svg", "large": "img/logo.svg" },
+    "links": [
+      { "name": "Website", "url": "https://firebirdsql.org" }
+    ],
+    "screenshots": [],
+    "version": "0.2.0",
+    "updated": "2026-10-19"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=10.4.0",
+    "plugins": []
+  },
+  "includes": [
+    { "type": "README", "path": "README.md" }
+  ],
+  "backend": true,
+  "executable": "gpx_grafana-firebird-datasource",
+  "metrics": true,
+  "alerting": true
+}

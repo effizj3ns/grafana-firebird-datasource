@@ -1,0 +1,15 @@
+# Build artifacts
+dist/
+node_modules/
+pkg/gpx_slh-firebird-datasource
+*.exe
+
+# Go
+pkg/vendor/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
