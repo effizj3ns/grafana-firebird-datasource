@@ -2,6 +2,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Grafana](https://img.shields.io/badge/Grafana-10.4%2B-orange)](https://grafana.com)
+[![CI](https://github.com/effizj3ns/grafana-firebird-datasource/actions/workflows/ci.yml/badge.svg)](https://github.com/effizj3ns/grafana-firebird-datasource/actions/workflows/ci.yml)
 [![Firebird](https://img.shields.io/badge/Firebird-2.5%20%7C%203.0%20%7C%204.0%20%7C%205.0-red)](#compatibility)
 [![Go](https://img.shields.io/badge/Go-1.26%2B-00ADD8)](https://go.dev)
 
