@@ -1,7 +1,7 @@
 {
   "name": "grafana-firebird-datasource",
   "version": "0.2.0",
-  "description": "Native Grafana datasource for Firebird 2.x (Komalog TMS)",
+  "description": "Native Grafana datasource for Firebird databases",
   "scripts": {
     "build": "webpack -c ./webpack.config.ts",
     "dev": "webpack -w -c ./webpack.config.ts",

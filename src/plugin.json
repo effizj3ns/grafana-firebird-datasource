@@ -1,6 +1,6 @@
 {
   "type": "datasource",
-  "name": "Firebird (Komalog)",
+  "name": "Firebird",
   "id": "grafana-firebird-datasource",
   "info": {
     "description": "Execute read-only SQL queries against Firebird databases from Grafana dashboards",
